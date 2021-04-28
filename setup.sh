@@ -305,12 +305,6 @@ function _check_results() {
         . /etc/swizzin/sources/functions/transmission
         whiptail_transmission_source
     fi
-    if grep -q qbittorrent "$results" || grep -q deluge "$results"; then
-        . /etc/swizzin/sources/functions/libtorrent
-        check_client_compatibility setup
-        whiptail_libtorrent_rasterbar
-        export SKIP_LT=True
-    fi
 
     if [[ $(grep -s rutorrent "$gui") ]] && [[ ! $(grep -s nginx "$results") ]]; then # Check nginx requirement for more than rutorrent
         if (whiptail --title "nginx conflict" --yesno --yes-button "Install nginx" --no-button "Remove ruTorrent" "WARNING: The installer has detected that ruTorrent is to be installed without nginx. To continue, the installer must either install nginx or remove ruTorrent from the packages to be installed." 8 78); then
@@ -380,6 +374,9 @@ function _post() {
         echo_info "You can now use the box command to manage swizzin features, e.g. \`box install nginx panel\`"
     fi
     echo_docs getting-started/box-basics
+    #
+    # Run the bash_completion installer from the update folder
+    bash /etc/swizzin/scripts/update/bash_completion.sh
 }
 
 _run_checks() {
